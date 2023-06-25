@@ -1,0 +1,93 @@
+package highspeedlinecost;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+class HighSpeedLine {
+    int site1;
+    int site2;
+    int cost;
+
+    public HighSpeedLine(int site1, int site2, int cost) {
+        this.site1 = site1;
+        this.site2 = site2;
+        this.cost = cost;
+    }
+}
+
+public class HighSpeedLineCost {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        boolean isFirstCase = true;
+
+        while ((line = reader.readLine()) != null && line.length() > 0) {
+            if (!isFirstCase) {
+                System.out.println(); // Separate output of consecutive cases
+            }
+            isFirstCase = false;
+
+            int N = Integer.parseInt(line); // Number of computer sites
+
+            // Read the previously chosen high-speed lines
+            List<HighSpeedLine> previousLines = new ArrayList<>();
+            for (int i = 0; i < N - 1; i++) {
+                String[] lineData = reader.readLine().split(" ");
+                int site1 = Integer.parseInt(lineData[0]);
+                int site2 = Integer.parseInt(lineData[1]);
+                int cost = Integer.parseInt(lineData[2]);
+                previousLines.add(new HighSpeedLine(site1, site2, cost));
+            }
+
+            int K = Integer.parseInt(reader.readLine()); // Number of new additional lines
+
+            // Read the new high-speed lines
+            List<HighSpeedLine> newLines = new ArrayList<>();
+            for (int i = 0; i < K; i++) {
+                String[] lineData = reader.readLine().split(" ");
+                int site1 = Integer.parseInt(lineData[0]);
+                int site2 = Integer.parseInt(lineData[1]);
+                int cost = Integer.parseInt(lineData[2]);
+                newLines.add(new HighSpeedLine(site1, site2, cost));
+            }
+
+            int M = Integer.parseInt(reader.readLine()); // Number of originally available high-speed lines
+
+            // Read the originally available high-speed lines
+            List<HighSpeedLine> originalLines = new ArrayList<>();
+            for (int i = 0; i < M; i++) {
+                String[] lineData = reader.readLine().split(" ");
+                int site1 = Integer.parseInt(lineData[0]);
+                int site2 = Integer.parseInt(lineData[1]);
+                int cost = Integer.parseInt(lineData[2]);
+                originalLines.add(new HighSpeedLine(site1, site2, cost));
+            }
+
+            // Compute the original cost
+            int originalCost = computeCost(previousLines);
+
+            // Merge the previous lines, new lines, and original lines
+            List<HighSpeedLine> allLines = new ArrayList<>();
+            allLines.addAll(previousLines);
+            allLines.addAll(newLines);
+            allLines.addAll(originalLines);
+
+            // Compute the new cost
+            int newCost = computeCost(allLines);
+
+            System.out.println(originalCost);
+            System.out.println(newCost);
+        }
+    }
+
+    private static int computeCost(List<HighSpeedLine> lines) {
+        int cost = 0;
+        for (HighSpeedLine line : lines) {
+            cost += line.cost;
+        }
+        return cost;
+    }
+}
